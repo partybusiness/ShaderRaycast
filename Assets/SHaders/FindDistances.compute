@@ -1,0 +1,117 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+RWStructuredBuffer<float4> distances; //distances calculated according to this
+
+Texture2D<float4> map;
+
+SamplerState samplermap
+{
+	Filter = MIN_POINT_MAG_POINT_MIP_POINT;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
+
+float2 forward;
+
+float2 position;
+
+float mapSize = 512.0;
+
+float2 Pos2UV(float2 pos) {
+	return pos / mapSize;
+}
+
+//based on this: https://theshoemaker.de/2016/02/ray-casting-in-2d-grids/
+
+float2 Intersect(float2 startPos, float2 forw) {
+
+	float2 currentPos = startPos;
+	float2 tile = floor(startPos)+1;
+	float2 dTile = lerp(-1, 1, forw>0);
+	float2 dt = ((tile + lerp(-1, 0, forw>0)) - startPos) / forw;
+	float2 ddt = dTile / forw;
+	float t = 0;
+
+	if (length(forw)>0.0) {
+		while (t<512.0) {
+			if (dt.x < dt.y) {
+				tile.x = tile.x + dTile.x;
+				float sdt = dt.x;
+				t = t + sdt;
+				dt.x = dt.x + ddt.x - dt.x;
+				dt.y = dt.y - sdt;
+			}
+			else {
+				tile.y = tile.y + dTile.y;
+				float sdt = dt.y;
+				t = t + sdt;
+				dt.x = dt.x - sdt;
+				dt.y = dt.y + ddt.y - sdt;
+			}
+			float4 col = map.SampleLevel(samplermap, Pos2UV(tile), 0);
+			if (col.r > 0.1) {
+				return tile;
+			} //else can we store empty tiles somewhere?
+		}
+	}
+
+	return currentPos;
+}
+
+float2 posPoint;
+
+float lineLineDistance(float2 start, float2 dir, float2 C, float2 D)
+{
+	//first line as start pos and dir
+	float a1 = dir.y;
+	float b1 = - dir.x;
+	float c1 = a1 * (start.x) + b1 * (start.y);
+
+	//second line defined by ends of line
+	float a2 = D.y - C.y;
+	float b2 = C.x - D.x;
+	float c2 = a2 * (C.x) + b2 * (C.y);
+
+	float determinant = a1 * b2 - a2 * b1;
+
+	if (determinant == 0)
+	{
+		return mapSize*2.0;
+	}
+	else
+	{
+		float x = (b2*c1 - b1 * c2) / determinant;
+		float y = (a1*c2 - a2 * c1) / determinant;
+		posPoint = float2(x, y);
+		if (dot(dir, posPoint - start) > 0)
+			return length(posPoint-start);
+		else
+			return mapSize*2.0;
+	}
+}
+
+
+[numthreads(512,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	float angle = id.x / 256.0 - 1.0; //angle offset of this strip ranging from -1.0 to 1.0
+	float B = -angle; //convert to radians, decide how wide view is?
+	float2 newForward = float2(forward.x * cos(B) - forward.y * sin(B) , forward.x * sin(B) + forward.y * cos(B)); //rotate vector by B?
+
+	//map.SampleLevel (samplermap, Pos2UV(position.xy), 0).r; //how to raycast vector across map?
+	//map.SampleLevel(samplermap, Pos2UV(position.xy + newForward *100.0), 0).r; //how to raycast vector across map?
+
+	
+
+	float2 samplePos = Intersect(position, newForward); //make this float4 so I can include both edge and centre of square?
+
+	float calcDistance = length(position - samplePos);
+
+	float4 col = map.SampleLevel(samplermap, Pos2UV(samplePos), 0);
+
+	//todo get v coordinate within pixel
+
+	distances[id.x] = float4(calcDistance,col.r,col.g,col.b);
+}
