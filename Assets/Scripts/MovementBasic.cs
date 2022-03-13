@@ -11,9 +11,15 @@ public class MovementBasic : MonoBehaviour
     float rotationSpeed = 230f;
 
 
+    [SerializeField]
+    Texture2D map;
+
     float forwardVel = 0f;
 
     float rotationVel = 0f;
+
+    int storedX = 0;
+    int storedY = 0;
 
     void Update()
     {
@@ -23,7 +29,27 @@ public class MovementBasic : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Translate(transform.forward * forwardVel * Time.fixedDeltaTime, Space.World);
+        var forwardDirection = transform.forward * forwardVel * Time.fixedDeltaTime;
+        var goalX = Mathf.FloorToInt(transform.position.x + forwardDirection.x);
+        var goalY = Mathf.FloorToInt(transform.position.z + forwardDirection.z);
+
+        if (goalX!=storedX || goalY !=storedY)
+        {
+            var targetSample = map.GetPixel(goalX, goalY);
+            if (targetSample.r >0.1)
+            {
+                forwardDirection.x = 0;
+                forwardDirection.z = 0; //could make this fancier so you slide along wall?
+            } else
+            {
+                storedX = goalX;
+                storedY = goalY;
+            }            
+        }
+        transform.Translate(forwardDirection, Space.World);
+
+        //Debug.Log("Sampling "+targetSample.ToString("F2") + ", " + Mathf.FloorToInt(forwardDirection.x) + ", " + Mathf.FloorToInt(forwardDirection.z));
+        
         transform.Rotate(Vector3.up * rotationVel * Time.fixedDeltaTime, Space.World);
     }
 }
