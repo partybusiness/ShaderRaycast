@@ -25,7 +25,7 @@ float2 Pos2UV(float2 pos) {
 
 //based on this: https://theshoemaker.de/2016/02/ray-casting-in-2d-grids/
 
-float2 Intersect(float2 startPos, float2 forw) {
+float4 Intersect(float2 startPos, float2 forw) {
 
 	float2 currentPos = startPos;
 	float2 tile = floor(startPos)+1;
@@ -52,45 +52,15 @@ float2 Intersect(float2 startPos, float2 forw) {
 			}
 			float4 col = map.SampleLevel(samplermap, Pos2UV(tile), 0);
 			if (col.r > 0.1) {
-				return tile;
+				float2 pos = startPos + forw * t;
+				return float4(t, col.gb, (pos.x+pos.y)%1); //distance, colour data, and v for uv
 			} //else can we store empty tiles somewhere?
 		}
 	}
 
-	return currentPos;
+	return float4(512, 0,0,0);
 }
 
-float2 posPoint;
-
-float lineLineDistance(float2 start, float2 dir, float2 C, float2 D)
-{
-	//first line as start pos and dir
-	float a1 = dir.y;
-	float b1 = - dir.x;
-	float c1 = a1 * (start.x) + b1 * (start.y);
-
-	//second line defined by ends of line
-	float a2 = D.y - C.y;
-	float b2 = C.x - D.x;
-	float c2 = a2 * (C.x) + b2 * (C.y);
-
-	float determinant = a1 * b2 - a2 * b1;
-
-	if (determinant == 0)
-	{
-		return mapSize*2.0;
-	}
-	else
-	{
-		float x = (b2*c1 - b1 * c2) / determinant;
-		float y = (a1*c2 - a2 * c1) / determinant;
-		posPoint = float2(x, y);
-		if (dot(dir, posPoint - start) > 0)
-			return length(posPoint-start);
-		else
-			return mapSize*2.0;
-	}
-}
 
 
 [numthreads(512,1,1)]
@@ -105,13 +75,13 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
 	
 
-	float2 samplePos = Intersect(position, newForward); //make this float4 so I can include both edge and centre of square?
+	float4 samplePos = Intersect(position, newForward);
 
-	float calcDistance = length(position - samplePos);
+	//float calcDistance = length(position - samplePos);
 
-	float4 col = map.SampleLevel(samplermap, Pos2UV(samplePos), 0);
+	//float4 col = map.SampleLevel(samplermap, Pos2UV(samplePos), 0);
 
 	//todo get v coordinate within pixel
 
-	distances[id.x] = float4(calcDistance,col.r,col.g,col.b);
+	distances[id.x] = Intersect(position, newForward);
 }
