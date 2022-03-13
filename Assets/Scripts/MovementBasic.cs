@@ -30,8 +30,8 @@ public class MovementBasic : MonoBehaviour
     private void FixedUpdate()
     {
         var forwardDirection = transform.forward * forwardVel * Time.fixedDeltaTime;
-        var goalX = Mathf.FloorToInt(transform.position.x + forwardDirection.x);
-        var goalY = Mathf.FloorToInt(transform.position.z + forwardDirection.z);
+        var goalX = Mathf.FloorToInt(transform.position.x + forwardDirection.x) + 1;
+        var goalY = Mathf.FloorToInt(transform.position.z + forwardDirection.z) + 1;
 
         if (goalX!=storedX || goalY !=storedY)
         {
@@ -39,7 +39,7 @@ public class MovementBasic : MonoBehaviour
             if (targetSample.r >0.1)
             {
                 forwardDirection.x = 0;
-                forwardDirection.z = 0; //could make this fancier so you slide along wall?
+                forwardDirection.z = 0; //could make this fancier so you can slide along the wall?
             } else
             {
                 storedX = goalX;
