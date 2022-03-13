@@ -19,14 +19,18 @@ public class RenderStrips : MonoBehaviour
 
     public Vector2 forward;
 
+    public float fov = 1.2f;
+
     Vector4[] distances = new Vector4[512];
 
     private void Start()
     {
         findDistances.SetTexture(0, "map", map);
         findDistances.SetFloat("mapSize", map.width);
+        findDistances.SetFloat("fov", fov);
+        renderMaterial.SetFloat("fov", fov);
 
-   //     https://docs.unity3d.com/540/Documentation/ScriptReference/Shader.SetGlobalFloatArray.html
+        //     https://docs.unity3d.com/540/Documentation/ScriptReference/Shader.SetGlobalFloatArray.html
 
     }
 

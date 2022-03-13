@@ -49,6 +49,7 @@ Shader "Unlit/StripsRender"
 
 			float2 forward;
 			float2 position;
+			float fov;
 
 			//uniform float3 _Points [100]
 			float4 stripDistances[512];
@@ -69,7 +70,7 @@ Shader "Unlit/StripsRender"
 			fixed isWall = (ypos < (0.5 / dist.x));
 			fixed4 wallColour = float4(0, dist.gb, 1) / (dist.r*0.3) * dist.a;
 
-			float B = i.uv.x*-2.0 + 1.0;
+			float B = (i.uv.x*-2.0 + 1.0)*fov;
 			float2 newForward = float2(forward.x * cos(B) - forward.y * sin(B), forward.x * sin(B) + forward.y * cos(B)); //rotate vector by B
 
 			fixed yt = 1/(abs(ypos)*2);//how to project y angle ypos to distance to floor
