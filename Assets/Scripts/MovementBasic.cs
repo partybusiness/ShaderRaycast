@@ -38,8 +38,14 @@ public class MovementBasic : MonoBehaviour
             var targetSample = map.GetPixel(goalX, goalY);
             if (targetSample.r >0.1)
             {
-                forwardDirection.x = 0;
-                forwardDirection.z = 0; //could make this fancier so you can slide along the wall?
+                if (goalX!=storedX)
+                {
+                    forwardDirection.x = 0;
+                }
+                if (goalY!=storedY)
+                {
+                    forwardDirection.z = 0;
+                }
             } else
             {
                 storedX = goalX;
