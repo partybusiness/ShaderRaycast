@@ -59,6 +59,8 @@ Shader "Unlit/StripsRender"
 
 			float _fadeStrength;
 
+			float _screenHeight;
+
 			//uniform float3 _Points [100]
 			float4 stripDistances[512];
 
@@ -66,7 +68,7 @@ Shader "Unlit/StripsRender"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uv = TRANSFORM_TEX(v.uv * float2(1.0, _screenHeight), _MainTex);
                 return o;
             }
 

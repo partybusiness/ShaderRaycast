@@ -37,7 +37,7 @@ float4 Intersect(float2 startPos, float2 forw) {
 	float t = 0;
 
 	if (length(forw)>0.0) {
-		while (t<512.0) {
+		while (t<32.0) {
 			if (dt.x < dt.y) {
 				tile.x = tile.x + dTile.x;
 				float sdt = dt.x;

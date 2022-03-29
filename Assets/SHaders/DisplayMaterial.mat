@@ -83,6 +83,6 @@ Material:
     - _CeilingColour: {r: 0.9777162, g: 0.3537736, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FloorColour1: {r: 0.24528301, g: 0, b: 0.007204622, a: 1}
+    - _FloorColour1: {r: 0.26415092, g: 0.008721969, b: 0.016830795, a: 1}
     - _FloorColour2: {r: 1, g: 0.9858491, b: 0.9889567, a: 1}
   m_BuildTextureStacks: []

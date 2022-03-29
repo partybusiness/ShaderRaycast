@@ -21,6 +21,8 @@ public class RenderStrips : MonoBehaviour
 
     public float fov = 1.2f;
 
+    public float screenHeight = 0.7f;
+
     Vector4[] distances = new Vector4[512];
 
     private void Start()
@@ -29,6 +31,9 @@ public class RenderStrips : MonoBehaviour
         findDistances.SetFloat("mapSize", map.width);
         findDistances.SetFloat("fov", fov);
         renderMaterial.SetFloat("fov", fov);
+        renderMaterial.SetFloat("_screenHeight", screenHeight);
+        GetComponent<Camera>().rect = new Rect(0, 1- screenHeight, 1, screenHeight);
+        //create alternate camera for bottom UI?
 
         //     https://docs.unity3d.com/540/Documentation/ScriptReference/Shader.SetGlobalFloatArray.html
 
