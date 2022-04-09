@@ -25,18 +25,20 @@ public class RenderStrips : MonoBehaviour
 
     Vector4[] distances = new Vector4[512];
 
+    MonsterRenderer monsterRenderer;
+
     private void Start()
     {
         findDistances.SetTexture(0, "map", map);
         findDistances.SetFloat("mapSize", map.width);
-        findDistances.SetFloat("fov", fov);
-        renderMaterial.SetFloat("fov", fov);
+        Shader.SetGlobalFloat("fov", fov);
+        renderMaterial.SetTexture("_MapTex", map);        
         renderMaterial.SetFloat("_screenHeight", screenHeight);
         GetComponent<Camera>().rect = new Rect(0, 1- screenHeight, 1, screenHeight);
         //create alternate camera for bottom UI?
 
         //     https://docs.unity3d.com/540/Documentation/ScriptReference/Shader.SetGlobalFloatArray.html
-
+        monsterRenderer = GetComponent<MonsterRenderer>();
     }
 
     private void OnEnable()
@@ -64,14 +66,16 @@ public class RenderStrips : MonoBehaviour
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         CalcPos();
-        findDistances.SetVector("forward", forward);
-        findDistances.SetVector("position", position);
+        Shader.SetGlobalVector("forward", forward);
+        Shader.SetGlobalVector("position", position);
         findDistances.Dispatch(0, distances.Length, 1, 1);
         distanceBuffer.GetData(distances);
 
-        renderMaterial.SetVector("forward", forward);
-        renderMaterial.SetVector("position", position);
-        renderMaterial.SetVectorArray("stripDistances", distances);
+        
+        Shader.SetGlobalVectorArray("stripDistances", distances);
+        //renderMaterial.SetVectorArray("stripDistances", distances);
         Graphics.Blit(source, destination, renderMaterial);
+
+        monsterRenderer.RenderMonsters(destination);
     }
 }

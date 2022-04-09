@@ -6,6 +6,8 @@ Shader "Unlit/StripsRender"
 
 		_WallTex("Wall Texture", 2D) = "white" {}
 
+		_MapTex("Map Texture", 2D) = "white" {}
+
 		_TileCount("Number of tiles", Int) = 8
 
 		_fadeStrength("Fade Strength", float) = 0.3
@@ -42,10 +44,10 @@ Shader "Unlit/StripsRender"
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+
+			sampler2D _MapTex;
 
 			sampler2D _WallTex;
-			float4 _WallTex_ST;
 
 			float4 _FloorColour1;
 			float4 _FloorColour2;
@@ -61,14 +63,13 @@ Shader "Unlit/StripsRender"
 
 			float _screenHeight;
 
-			//uniform float3 _Points [100]
 			float4 stripDistances[512];
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv * float2(1.0, _screenHeight), _MainTex);
+                o.uv = v.uv * float2(1.0, _screenHeight);
                 return o;
             }
 
@@ -80,6 +81,7 @@ Shader "Unlit/StripsRender"
 
             fixed4 frag (v2f i) : SV_Target
             {
+
 			fixed4 dist = stripDistances[floor(i.uv.x * 512)];
 			//use i.uv.y to calc amount of thing?
 			fixed ypos = abs(i.uv.y - 0.5);
@@ -94,8 +96,9 @@ Shader "Unlit/StripsRender"
 			fixed yt = 1/(abs(ypos)*2);//how to project y angle ypos to distance to floor
 			fixed2 floorCoord = position + newForward * yt;
 			fixed checkVal = (floor(floorCoord.x) + floor(floorCoord.y)) % 2;
-			fixed4 floorColour = lerp(_FloorColour1, _FloorColour2, checkVal);
-			fixed4 noWallColour = lerp (floorColour, _CeilingColour, i.uv.y > 0.5);
+			fixed4 floorColour = tex2D(_MapTex, (floorCoord + 1.0) / 512.0);
+			//lerp(_FloorColour1, _FloorColour2, checkVal);
+			fixed4 noWallColour = lerp(floorColour, _CeilingColour, i.uv.y > 0.5);
 			
 			fixed2 singleWallUv = float2(dist.a, inverseLerp(0.5 - wallHeight, 0.5 + wallHeight, i.uv.y));
 			fixed2 wallUv = (floor(dist.gb*_TileCount) + singleWallUv) / _TileCount; //invlerp (0.5-wallHeight,0.5+wallHeight, yt); ??
@@ -104,7 +107,9 @@ Shader "Unlit/StripsRender"
 			fixed4 wallColour = tex2D(_WallTex, wallUv) / clamp((dist.r)*_fadeStrength,1,512);// float4(0, dist.gb, 1) / (dist.r*0.3) * dist.a;
 			//_TileCount
 			//_FloorColour1
-			return lerp(noWallColour * ypos, wallColour, isWall);
+			fixed4 result = lerp(noWallColour * ypos, wallColour, isWall);
+			//result.r = (floor(floor(i.uv.x * 512) % 50) < 25);
+			return result;
             }
             ENDCG
         }

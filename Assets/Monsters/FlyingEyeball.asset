@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e416bc921d859b94b9fd4357c4d3bc63, type: 3}
   m_Name: FlyingEyeball
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
+  mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  material: {fileID: 2100000, guid: 96f30d013a45a514695216b54b07842f, type: 2}
+  texture: {fileID: 2800000, guid: 0688b25fd989253429ca5e80a39b26f9, type: 3}
+  xSprites: 8
+  ySprites: 8
   rotationSpeed: 40
   movementSpeed: 5

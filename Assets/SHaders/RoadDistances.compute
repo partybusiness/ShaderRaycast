@@ -12,12 +12,15 @@ SamplerState samplermap
 	AddressV = Wrap;
 };
 
+float4 _Time;
 
 float2 forward;
 
 float2 position;
 
 float fov;
+
+float speed;
 
 float mapSize = 256.0;
 
@@ -39,6 +42,6 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 	//distances[id.x] = float4(id.x % 4, id.x % 4, 0, 1);
 	float angle = (id.x + 1.0) / 256.0;
 	float dist = 1.0 / sin(angle);
-	float depth = cos(angle) * dist;
+	float depth = cos(angle) * dist + _Time.x * speed;
 	distances[id.x] = float4(dist, sin(id.x*0.01)*0.05+0.5, depth, 1);
 }

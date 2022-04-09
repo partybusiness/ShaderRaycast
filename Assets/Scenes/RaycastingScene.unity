@@ -252,7 +252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 10
   rotationSpeed: 230
-  map: {fileID: 2800000, guid: 817f548afc670c644920b723b900e90a, type: 3}
+  map: {fileID: 2800000, guid: 85a0cdb2beeb32c4b8ecd2273581cad1, type: 3}
 --- !u!81 &1526455199
 AudioListener:
   m_ObjectHideFlags: 0
@@ -312,7 +312,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526455197}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 216.49, y: 1, z: 217.61}
+  m_LocalPosition: {x: 225, y: 1, z: 132}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderMaterial: {fileID: 2100000, guid: 3a8a594c88c0b8b45bbc33b734e3e64c, type: 2}
   findDistances: {fileID: 7200000, guid: 4ea32f7a626f31e43b6b6199ca6bc523, type: 3}
-  map: {fileID: 2800000, guid: 817f548afc670c644920b723b900e90a, type: 3}
+  map: {fileID: 2800000, guid: 85a0cdb2beeb32c4b8ecd2273581cad1, type: 3}
   position: {x: 0, y: 0}
   forward: {x: 0, y: 0}
   fov: 1.2
@@ -352,8 +352,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsters:
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 0, y: 0}
+    position: {x: 229, y: 88}
     rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: 15, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: 5, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: 20, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: 0, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: -5, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: -10, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: -15, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: -20, y: 2}
+    rotation: 0
+    animationFrame: 0
+  - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
+    position: {x: -25, y: 2}
+    rotation: 0
+    animationFrame: 0
+  monsterMaterial: {fileID: 2100000, guid: 96f30d013a45a514695216b54b07842f, type: 2}
 --- !u!1 &1954901337
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &1954901338
 MeshCollider:
   m_ObjectHideFlags: 0

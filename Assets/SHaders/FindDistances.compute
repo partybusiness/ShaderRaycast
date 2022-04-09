@@ -56,7 +56,7 @@ float4 Intersect(float2 startPos, float2 forw) {
 			if (col.r > 0.1) {
 				float2 pos = startPos + forw * t;
 				return float4(t, col.gb, (pos.x+pos.y)%1); //distance, colour data, and v for uv
-			} //else can we store empty tiles somewhere?
+			} //else should we store empty tiles somewhere?
 		}
 	}
 

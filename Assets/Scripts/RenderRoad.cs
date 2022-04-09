@@ -10,6 +10,8 @@ public class RenderRoad : MonoBehaviour
     [SerializeField]
     ComputeShader findDistances;
 
+    [SerializeField]
+    float speed = 8f;
 
     ComputeBuffer distanceBuffer;
 
@@ -43,6 +45,9 @@ public class RenderRoad : MonoBehaviour
         //CalcPos();
         //findDistances.SetVector("forward", forward);
         //findDistances.SetVector("position", position);
+        findDistances.SetVector("_Time", Shader.GetGlobalVector("_Time"));
+        findDistances.SetFloat("speed", speed);
+        
         findDistances.Dispatch(0, distances.Length, 1, 1);
         distanceBuffer.GetData(distances);
 
