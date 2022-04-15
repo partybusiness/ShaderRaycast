@@ -41,6 +41,10 @@ Shader "Unlit/MonsterShader"
 			float monsterDist = 1.0;
 			float2 monsterPos;
 
+			float2 forward;
+			float2 position;
+			float fov;
+
 			float _testVal;
 
 			float _ratio;
@@ -52,19 +56,25 @@ Shader "Unlit/MonsterShader"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = (v.uv - 0.5) * monsterDist * fixed2(_ratio,1) + monsterPos;// recalculate based on distance and position?
+				o.uv = ((v.uv - 0.5) * monsterDist * fixed2(_ratio, 1));// recalculate based on distance and position?
+				o.uv = o.uv + 0.5 - (monsterPos - 0.5) * monsterDist * fixed2(_ratio, 1);
 				o.screen = v.uv;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
+				
+
 				//float monsterDist = 1.0;
 				//float2 monsterPos;
-                fixed4 col = tex2D(_MainTex, i.uv);
+				fixed4 col = tex2D(_MainTex, i.uv);
 				//fixed2 screenPos = ComputeScreenPos(i.vertex);
 				fixed4 dist = stripDistances[floor(i.screen.x * 512)];
 				col.a = (col.a * dist.x>monsterDist);
+				
+				//col.b = i.screen.y > monsterPos.y;
+
 				clip(col.a);
 				//col.r = (floor(floor(i.uv.x * 512)) % 50 < 25);
 			//compare to monsterDist

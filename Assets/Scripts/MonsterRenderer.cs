@@ -10,6 +10,20 @@ public class MonsterRenderer : MonoBehaviour
     [SerializeField]
     Material monsterMaterial;
 
+    [SerializeField]
+    float monsterHeight = 0.35f;
+
+
+    [SerializeField]
+    float monsterFOV = 1.35f;
+
+
+    [SerializeField]
+    Vector2 fixedScreenPos;
+
+    [SerializeField]
+    float fixedDistance;
+
     private Camera monsterCamera;
 
     RenderStrips strips;
@@ -35,12 +49,16 @@ public class MonsterRenderer : MonoBehaviour
             //float angle = id.x / 256.0 - 1.0; //angle offset of this strip ranging from -1.0 to 1.0
             //float B = -angle * fov; //convert to radians, decide how wide view is?
             //float2 newForward = float2(forward.x * cos(B) - forward.y * sin(B), forward.x * sin(B) + forward.y * cos(B)); //rotate vector by B?
-            var diff = monster.position - strips.position;
+            var diff = monster.position + Vector2.one*0.5f - strips.position;
+            var distance = diff.magnitude;
+            diff = diff.normalized;
             var angle = (Mathf.Atan2(diff.y, diff.x) - Mathf.Atan2(strips.forward.y, strips.forward.x)) ;
-
-            var screenPos = new Vector2(angle / strips.fov, 0.35f); //0.35
+            //if ((i.screen.x * 2.0 - 1.0) * fov < (-angle2))
+            //    (i.screen.x * 2.0 < ((-angle / strips.fov) + 1.0) / 2.0
+            var screenPos = new Vector2(((-angle / strips.fov) + 1.0f) / 2.0f, monsterHeight); //0.35 //strips.fov
+            //screenPos = monster.position;
             //var renderPos = monsterCamera.ScreenToWorldPoint(screenPos);
-            var distance = Vector2.Distance(monster.position, strips.position);
+            
             //var renderMatrix = Matrix4x4.TRS(renderPos, Quaternion.identity, Vector3.one);
             //monster.monsterClass.material, 1
 
@@ -48,13 +66,13 @@ public class MonsterRenderer : MonoBehaviour
             // Graphics.DrawMeshNow(monster.monsterClass.mesh, renderMatrix);
             //Graphics.CopyTexture();
 
-            Debug.Log(distance);
+            //Debug.Log(distance);
 
             monsterMaterial.SetFloat("monsterDist", distance);
             monsterMaterial.SetVector("monsterPos", screenPos);
             Graphics.Blit(monster.monsterClass.texture, destination, monsterMaterial);
             //Graphics.BlitMultiTap(monster.monsterClass.texture, destination, monsterMaterial, Vector2.zero);
-            return;
+            //return;
         }
     }
 }

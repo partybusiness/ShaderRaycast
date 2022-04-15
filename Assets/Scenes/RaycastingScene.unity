@@ -311,8 +311,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526455197}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 225, y: 1, z: 132}
+  m_LocalRotation: {x: 0, y: -0.998893, z: 0, w: 0.047040194}
+  m_LocalPosition: {x: 228.74786, y: 1, z: 91.137825}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -392,6 +392,10 @@ MonoBehaviour:
     rotation: 0
     animationFrame: 0
   monsterMaterial: {fileID: 2100000, guid: 96f30d013a45a514695216b54b07842f, type: 2}
+  monsterHeight: 0.74
+  monsterFOV: 1.35
+  fixedScreenPos: {x: 0, y: 0}
+  fixedDistance: 5
 --- !u!1 &1954901337
 GameObject:
   m_ObjectHideFlags: 0
