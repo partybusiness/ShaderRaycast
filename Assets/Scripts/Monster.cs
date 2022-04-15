@@ -10,5 +10,7 @@ public class Monster
     public Vector2 position;
     public float rotation;
     public int animationFrame;
+    public float distance; //distance to player, used for visual sorting
+    public float viewAngle; //angle to position on-screen
 
 }

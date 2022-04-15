@@ -39,6 +39,7 @@ public class RenderStrips : MonoBehaviour
 
         //     https://docs.unity3d.com/540/Documentation/ScriptReference/Shader.SetGlobalFloatArray.html
         monsterRenderer = GetComponent<MonsterRenderer>();
+        var visibleMap = monsterRenderer.GenerateVisibleMap(map);
     }
 
     private void OnEnable()

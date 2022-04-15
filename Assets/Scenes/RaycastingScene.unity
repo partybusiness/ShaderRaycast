@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &905931044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 905931045}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &905931045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905931044}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 206.4, y: 0.97562075, z: 132.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &913901788
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,8 +342,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526455197}
-  m_LocalRotation: {x: 0, y: -0.998893, z: 0, w: 0.047040194}
-  m_LocalPosition: {x: 228.74786, y: 1, z: 91.137825}
+  m_LocalRotation: {x: 0, y: 0.6672091, z: 0, w: -0.7448705}
+  m_LocalPosition: {x: 211.69846, y: 1, z: 133.2508}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -352,47 +383,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsters:
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 229, y: 88}
+    position: {x: 229.5, y: 88.5}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 15, y: 2}
+    position: {x: 206.5, y: 132.8}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 5, y: 2}
+    position: {x: 132.8, y: 132.8}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 20, y: 2}
+    position: {x: 133.02, y: 128.5}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 0, y: 2}
+    position: {x: 132.8, y: 123.7}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: -5, y: 2}
+    position: {x: 132.8, y: 135.7}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: -10, y: 2}
+    position: {x: 137.5, y: 132.8}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: -15, y: 2}
+    position: {x: 147, y: 132.8}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: -20, y: 2}
+    position: {x: 128, y: 132.8}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: -25, y: 2}
+    position: {x: 123.3, y: 132.8}
     rotation: 0
     animationFrame: 0
+    distance: 0
+    viewAngle: 0
   monsterMaterial: {fileID: 2100000, guid: 96f30d013a45a514695216b54b07842f, type: 2}
-  monsterHeight: 0.74
+  monsterHeight: 0.7
   monsterFOV: 1.35
   fixedScreenPos: {x: 0, y: 0}
   fixedDistance: 5

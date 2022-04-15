@@ -5,6 +5,7 @@ Shader "Unlit/MonsterShader"
         _MainTex ("Texture", 2D) = "white" {}
 		_testVal ("Test Val", float) = 0.6
 		_ratio ("Ratio", float) = 1.4
+		_fadeStrength("Fade Strength", float) = 0.3
     }
     SubShader
     {
@@ -49,6 +50,8 @@ Shader "Unlit/MonsterShader"
 
 			float _ratio;
 
+			float _fadeStrength;
+
 
 			float4 stripDistances[512];
 
@@ -73,7 +76,7 @@ Shader "Unlit/MonsterShader"
 				fixed4 dist = stripDistances[floor(i.screen.x * 512)];
 				col.a = (col.a * dist.x>monsterDist);
 				
-				//col.b = i.screen.y > monsterPos.y;
+				col.rgb = col.rgb / clamp((monsterDist)*_fadeStrength, 1, 512); //darken colour
 
 				clip(col.a);
 				//col.r = (floor(floor(i.uv.x * 512)) % 50 < 25);

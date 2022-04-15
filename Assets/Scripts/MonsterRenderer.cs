@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,11 +12,7 @@ public class MonsterRenderer : MonoBehaviour
     Material monsterMaterial;
 
     [SerializeField]
-    float monsterHeight = 0.35f;
-
-
-    [SerializeField]
-    float monsterFOV = 1.35f;
+    float monsterHeight = 0.7f;
 
 
     [SerializeField]
@@ -24,55 +21,72 @@ public class MonsterRenderer : MonoBehaviour
     [SerializeField]
     float fixedDistance;
 
-    private Camera monsterCamera;
+    //private Camera monsterCamera;
 
     RenderStrips strips;
+
+    RenderTexture visibleMap; //displays squares that monsters can see
 
     private void Start()
     {
         var distantCamera = new GameObject();
-        monsterCamera = distantCamera.AddComponent<Camera>();
+        //monsterCamera = distantCamera.AddComponent<Camera>();
         //what should be the setting?
-        monsterCamera.enabled = false;
+        //monsterCamera.enabled = false;
         strips = GetComponent<RenderStrips>();
+        
+        monsterMaterial.SetFloat("_ratio", Screen.width / Screen.height);
     }
 
 
     public void RenderMonsters(RenderTexture destination)
     {
-        monsterCamera.targetTexture = destination;
+        monsterMaterial.SetFloat("_ratio", Camera.main.aspect);
+        //Debug.Log("Size "+)
+
+        var visibleMonsters = new List<Monster>();
+        //monsterCamera.targetTexture = destination;
         foreach (var monster in monsters)
         {
-            monster.monsterClass.material.SetFloat("monsterDist", 1f);
-            //find angle between 
-
-            //float angle = id.x / 256.0 - 1.0; //angle offset of this strip ranging from -1.0 to 1.0
-            //float B = -angle * fov; //convert to radians, decide how wide view is?
-            //float2 newForward = float2(forward.x * cos(B) - forward.y * sin(B), forward.x * sin(B) + forward.y * cos(B)); //rotate vector by B?
             var diff = monster.position + Vector2.one*0.5f - strips.position;
-            var distance = diff.magnitude;
+            monster.distance = diff.magnitude;
             diff = diff.normalized;
-            var angle = (Mathf.Atan2(diff.y, diff.x) - Mathf.Atan2(strips.forward.y, strips.forward.x)) ;
-            //if ((i.screen.x * 2.0 - 1.0) * fov < (-angle2))
-            //    (i.screen.x * 2.0 < ((-angle / strips.fov) + 1.0) / 2.0
-            var screenPos = new Vector2(((-angle / strips.fov) + 1.0f) / 2.0f, monsterHeight); //0.35 //strips.fov
-            //screenPos = monster.position;
-            //var renderPos = monsterCamera.ScreenToWorldPoint(screenPos);
+            monster.viewAngle = (Mathf.Atan2(diff.y, diff.x) - Mathf.Atan2(strips.forward.y, strips.forward.x));
+            //TODO do I need to wrap this around to make sure it doesn't disappear at wrong time?
+            if (monster.viewAngle > Mathf.PI)
+                monster.viewAngle -= Mathf.PI * 2f;
+            if (monster.viewAngle < -Mathf.PI)
+                monster.viewAngle += Mathf.PI * 2f;
+
+            var halfWidth = 0.5f / monster.distance;
+
+            if (monster.viewAngle > -strips.fov - halfWidth && monster.viewAngle < strips.fov + halfWidth) //frustum culling // how to pad with monster width?
+                visibleMonsters.Add(monster);
+
             
-            //var renderMatrix = Matrix4x4.TRS(renderPos, Quaternion.identity, Vector3.one);
-            //monster.monsterClass.material, 1
-
-            // Graphics.SetRenderTarget(destination);
-            // Graphics.DrawMeshNow(monster.monsterClass.mesh, renderMatrix);
-            //Graphics.CopyTexture();
-
-            //Debug.Log(distance);
-
-            monsterMaterial.SetFloat("monsterDist", distance);
-            monsterMaterial.SetVector("monsterPos", screenPos);
-            Graphics.Blit(monster.monsterClass.texture, destination, monsterMaterial);
-            //Graphics.BlitMultiTap(monster.monsterClass.texture, destination, monsterMaterial, Vector2.zero);
             //return;
         }
+
+        //sort by distance
+        visibleMonsters.Sort(delegate (Monster x, Monster y)
+        {
+            return y.distance.CompareTo(x.distance);
+        });
+
+
+        for (var i=0;i< visibleMonsters.Count;i++)
+        {
+            var monster = visibleMonsters[i];
+            var screenPos = new Vector2(((-monster.viewAngle / strips.fov) + 1.0f) / 2.0f, monsterHeight); //0.35 //strips.fov
+            monsterMaterial.SetFloat("monsterDist", monster.distance);
+            monsterMaterial.SetVector("monsterPos", screenPos);
+            Graphics.Blit(monster.monsterClass.texture, destination, monsterMaterial);
+        }
+    }
+
+    internal RenderTexture GenerateVisibleMap(Texture2D map)
+    {
+        visibleMap = new RenderTexture(map.width, map.height, 16, RenderTextureFormat.RGB111110Float, RenderTextureReadWrite.Linear);
+        return visibleMap;
     }
 }
