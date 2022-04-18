@@ -82,7 +82,7 @@ Material:
     - _TileCount: 8
     - _UVSec: 0
     - _ZWrite: 1
-    - _fadeStrength: 0.3
+    - _fadeStrength: 0
     m_Colors:
     - _CeilingColour: {r: 0.9777162, g: 0.3537736, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

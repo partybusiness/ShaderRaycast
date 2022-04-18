@@ -343,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526455197}
   m_LocalRotation: {x: 0, y: 0.6672091, z: 0, w: -0.7448705}
-  m_LocalPosition: {x: 211.69846, y: 1, z: 133.2508}
+  m_LocalPosition: {x: 267.8, y: 1, z: 119.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -395,31 +395,31 @@ MonoBehaviour:
     distance: 0
     viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 132.8, y: 132.8}
+    position: {x: 212.4, y: 134.9}
     rotation: 0
     animationFrame: 0
     distance: 0
     viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 133.02, y: 128.5}
+    position: {x: 196.2, y: 128.5}
     rotation: 0
     animationFrame: 0
     distance: 0
     viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 132.8, y: 123.7}
+    position: {x: 254.3, y: 128}
     rotation: 0
     animationFrame: 0
     distance: 0
     viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 132.8, y: 135.7}
+    position: {x: 256.1, y: 120}
     rotation: 0
     animationFrame: 0
     distance: 0
     viewAngle: 0
   - monsterClass: {fileID: 11400000, guid: 5369c8e6b2309f44d8ae73e9602668a2, type: 2}
-    position: {x: 137.5, y: 132.8}
+    position: {x: 220.5, y: 120.5}
     rotation: 0
     animationFrame: 0
     distance: 0
@@ -444,9 +444,10 @@ MonoBehaviour:
     viewAngle: 0
   monsterMaterial: {fileID: 2100000, guid: 96f30d013a45a514695216b54b07842f, type: 2}
   monsterHeight: 0.7
-  monsterFOV: 1.35
   fixedScreenPos: {x: 0, y: 0}
   fixedDistance: 5
+  clearVisibleMaterial: {fileID: 2100000, guid: 901ca15e09fb41f429d4a2cb528c2336, type: 2}
+  drawVisibleMaterial: {fileID: 2100000, guid: 86d29e5012098cb4a83d749deafd4286, type: 2}
 --- !u!1 &1954901337
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,11 +21,21 @@ public class MonsterRenderer : MonoBehaviour
     [SerializeField]
     float fixedDistance;
 
+
+    [SerializeField]
+    Material clearVisibleMaterial;
+
+
+    [SerializeField]
+    Material drawVisibleMaterial;
+
     //private Camera monsterCamera;
 
     RenderStrips strips;
 
     RenderTexture visibleMap; //displays squares that monsters can see
+
+    Texture2D wallMap; //used for blitting
 
     private void Start()
     {
@@ -43,28 +53,35 @@ public class MonsterRenderer : MonoBehaviour
     {
         monsterMaterial.SetFloat("_ratio", Camera.main.aspect);
         //Debug.Log("Size "+)
+        //clearVisible.Dispatch(0, visibleMap.width, visibleMap.height, 1);
+        Graphics.Blit(wallMap, visibleMap, clearVisibleMaterial);
+        //monster position direction list?
 
         var visibleMonsters = new List<Monster>();
         //monsterCamera.targetTexture = destination;
         foreach (var monster in monsters)
         {
-            var diff = monster.position + Vector2.one*0.5f - strips.position;
+            var diff = monster.position - strips.position;
             monster.distance = diff.magnitude;
             diff = diff.normalized;
             monster.viewAngle = (Mathf.Atan2(diff.y, diff.x) - Mathf.Atan2(strips.forward.y, strips.forward.x));
-            //TODO do I need to wrap this around to make sure it doesn't disappear at wrong time?
+            
+            //make sure value is in good range for comparison
             if (monster.viewAngle > Mathf.PI)
                 monster.viewAngle -= Mathf.PI * 2f;
             if (monster.viewAngle < -Mathf.PI)
                 monster.viewAngle += Mathf.PI * 2f;
 
-            var halfWidth = 0.5f / monster.distance;
-
-            if (monster.viewAngle > -strips.fov - halfWidth && monster.viewAngle < strips.fov + halfWidth) //frustum culling // how to pad with monster width?
+            var halfWidth = 0.5f / monster.distance; //pad with monster width
+            if (monster.viewAngle > -strips.fov - halfWidth && monster.viewAngle < strips.fov + halfWidth) //frustum culling
                 visibleMonsters.Add(monster);
 
-            
-            //return;
+            //draw what the monster sees on visibleMap
+            //writeVisible.Dispatch(0, visibleMap.width, visibleMap.height, 1);
+
+            //drawVisibleMaterial.SetVector("monsterForward", monster.rotation);
+            drawVisibleMaterial.SetVector("monsterWorldPos",monster.position);
+            Graphics.Blit(wallMap, visibleMap, drawVisibleMaterial);
         }
 
         //sort by distance
@@ -87,6 +104,10 @@ public class MonsterRenderer : MonoBehaviour
     internal RenderTexture GenerateVisibleMap(Texture2D map)
     {
         visibleMap = new RenderTexture(map.width, map.height, 16, RenderTextureFormat.RGB111110Float, RenderTextureReadWrite.Linear);
+        visibleMap.filterMode = FilterMode.Point;
+        visibleMap.useMipMap = false;
+        wallMap = map;
+
         return visibleMap;
     }
 }

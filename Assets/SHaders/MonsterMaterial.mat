@@ -73,8 +73,8 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _fadeStrength: 0.3
-    - _ratio: 3.020768
+    - _fadeStrength: 0
+    - _ratio: 1.9835165
     - _testVal: 2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

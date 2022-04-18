@@ -47,6 +47,8 @@ Shader "Unlit/StripsRender"
 
 			sampler2D _MapTex;
 
+			sampler2D visibleMap;
+
 			sampler2D _WallTex;
 
 			float4 _FloorColour1;
@@ -96,7 +98,8 @@ Shader "Unlit/StripsRender"
 			fixed yt = 1/(abs(ypos)*2);//how to project y angle ypos to distance to floor
 			fixed2 floorCoord = position + newForward * yt;
 			fixed checkVal = (floor(floorCoord.x) + floor(floorCoord.y)) % 2;
-			fixed4 floorColour = tex2D(_MapTex, (floorCoord + 1.0) / 512.0);
+			fixed2 floorUV = (floorCoord + 1) / 512.0;
+			fixed4 floorColour = tex2D(_MapTex, floorUV) + tex2D(visibleMap, floorUV);
 			//lerp(_FloorColour1, _FloorColour2, checkVal);
 			fixed4 noWallColour = lerp(floorColour, _CeilingColour, i.uv.y > 0.5);
 			
@@ -107,7 +110,7 @@ Shader "Unlit/StripsRender"
 			fixed4 wallColour = tex2D(_WallTex, wallUv) / clamp((dist.r)*_fadeStrength,1,512);// float4(0, dist.gb, 1) / (dist.r*0.3) * dist.a;
 			//_TileCount
 			//_FloorColour1
-			fixed4 result = lerp(noWallColour * ypos, wallColour, isWall);
+			fixed4 result = lerp(noWallColour, wallColour, isWall);
 			//result.r = (floor(floor(i.uv.x * 512) % 50) < 25);
 			return result;
             }
