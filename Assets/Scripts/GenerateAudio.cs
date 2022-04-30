@@ -1,0 +1,158 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GenerateAudio : MonoBehaviour
+{
+    [Range(1, 20000)]  //Creates a slider in the inspector
+    public float frequency1;
+
+    [Range(1, 20000)]  //Creates a slider in the inspector
+    public float frequency2;
+
+    public float sampleRate = 44100;
+    public float waveLengthInSeconds = 2.0f;
+
+    AudioSource audioSource;
+    int timeIndex = 0;
+
+    [SerializeField]
+    ComputeShader genAudioWave;
+
+    [SerializeField]
+    float sinMult = 0.01f;
+
+    ComputeBuffer audioBuffer;
+
+    float[] audioData;
+
+    int offset = 0;
+
+    private int needGen = 2048;
+
+    void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0; //force 2D sound
+        audioSource.Stop(); //avoids audiosource from starting to play automatically
+        audioSource.loop = true;
+
+    }
+
+
+    private void OnEnable()
+    {
+        audioBuffer = new ComputeBuffer(2048*2, sizeof(float));
+        genAudioWave.SetBuffer(0, "audioWave", audioBuffer);
+        genAudioWave.SetFloat("samples", sampleRate);
+        audioData = new float[2048*2];
+    }
+
+    private void OnDisable()
+    {
+        audioBuffer.Release();
+        audioBuffer = null;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (!audioSource.isPlaying)
+            {
+                timeIndex = 0;  //resets timer before playing sound
+                audioSource.Play();
+                frequency1 = 600f;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.H))
+        {
+            audioSource.Stop();
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            if (!audioSource.isPlaying)
+            {
+                timeIndex = 0;  //resets timer before playing sound
+                audioSource.Play();
+                frequency1 = 800f;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.J))
+        {
+            audioSource.Stop();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (!audioSource.isPlaying)
+            {
+                timeIndex = 0;  //resets timer before playing sound
+                audioSource.Play();
+                frequency1 = 1000f;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            audioSource.Stop();
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (!audioSource.isPlaying)
+            {
+                timeIndex = 0;  //resets timer before playing sound
+                audioSource.Play();
+                frequency1 = 1200f;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            audioSource.Stop();
+        }
+    }
+
+
+    private void FixedUpdate()
+    {
+
+        if (needGen>0)
+        {
+            offset += needGen;
+            genAudioWave.SetFloat("frequency", frequency1);
+            genAudioWave.SetFloat("timeOffset", offset);
+            genAudioWave.Dispatch(0, 2048*2, 1, 1);
+            audioBuffer.GetData(audioData);
+            
+            needGen = 0;
+        }
+    }
+
+    void OnAudioFilterRead(float[] data, int channels)
+    {
+        //Debug.Log(data.Length); //2048 where does that come from?
+        //
+       // Debug.Log("dataLength " + "s=" + audioData[0].ToString("F2") + "|" + audioData[2048].ToString("F2") + "|"+ audioData[audioData.Length-1].ToString("F2") + "  == " + needGen);
+        for (int i=0;i<data.Length;i++)
+        {
+            data[i] = audioData[i+ needGen];
+        }
+        needGen += data.Length;
+
+    }
+
+    /*   //Creates a sinewave
+       public float CreateSine(int timeIndex, float frequency, float sampleRate)
+       {
+           return Mathf.Sin(2 * Mathf.PI * timeIndex * frequency / sampleRate);
+       }*/
+}
+
+
+
