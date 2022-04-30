@@ -63,67 +63,31 @@ public class GenerateAudio : MonoBehaviour
         audioBuffer = null;
     }
 
+    void CheckKey (KeyCode key, float freq)
+    {
+        if (Input.GetKeyDown(key))
+        {
+            if (!audioSource.isPlaying)
+            {
+                timeIndex = 0;  //resets timer before playing sound
+                audioSource.Play();
+                frequency1 = freq;
+            }
+        }
+        if (Input.GetKeyUp(key))
+        {
+            audioSource.Stop();
+            audioIndex = 0;
+            offset = 0;
+        }
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            if (!audioSource.isPlaying)
-            {
-                timeIndex = 0;  //resets timer before playing sound
-                audioSource.Play();
-                frequency1 = 600f;
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.H))
-        {
-            audioSource.Stop();
-        }
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            if (!audioSource.isPlaying)
-            {
-                timeIndex = 0;  //resets timer before playing sound
-                audioSource.Play();
-                frequency1 = 800f;
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.J))
-        {
-            audioSource.Stop();
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (!audioSource.isPlaying)
-            {
-                timeIndex = 0;  //resets timer before playing sound
-                audioSource.Play();
-                frequency1 = 1000f;
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.K))
-        {
-            audioSource.Stop();
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if (!audioSource.isPlaying)
-            {
-                timeIndex = 0;  //resets timer before playing sound
-                audioSource.Play();
-                frequency1 = 1200f;
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            audioSource.Stop();
-        }
+        CheckKey(KeyCode.H, 600f);
+        CheckKey(KeyCode.J, 800f);
+        CheckKey(KeyCode.K, 1000f);
+        CheckKey(KeyCode.L, 1200f);
     }
 
 
@@ -140,7 +104,7 @@ public class GenerateAudio : MonoBehaviour
             genAudioWave.SetFloat("frequency", frequency1);
             genAudioWave.SetFloat("timeOffset", offset);
             genAudioWave.Dispatch(0, 2048, 1, 1);
-            Debug.Log(audioData.Count + ", " + audioIndex);
+            //Debug.Log(audioData.Count + ", " + audioIndex);
             audioBuffer.GetData(audioData[audioIndex]);
             audioIndex++;            
             needGen --;
