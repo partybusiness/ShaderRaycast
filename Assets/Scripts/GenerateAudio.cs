@@ -4,27 +4,32 @@ using UnityEngine;
 
 public class GenerateAudio : MonoBehaviour
 {
-    [Range(1, 20000)]  //Creates a slider in the inspector
+    [System.Serializable]
+    public class KeyBoard
+    {
+        public KeyCode key;
+        [Range(1, 20000)]
+        public float frequency;
+    }
+
+
     public float frequency1;
 
-    [Range(1, 20000)]  //Creates a slider in the inspector
-    public float frequency2;
 
     public float sampleRate = 44100;
     public float waveLengthInSeconds = 2.0f;
 
     AudioSource audioSource;
-    int timeIndex = 0;
 
     [SerializeField]
     ComputeShader genAudioWave;
-
-    [SerializeField]
-    float sinMult = 0.01f;
-
+    
     ComputeBuffer audioBuffer;
 
     List<float[]> audioData;
+
+    [SerializeField]
+    public List<KeyBoard> allKeys;
 
     int audioIndex = 0;
 
@@ -54,7 +59,7 @@ public class GenerateAudio : MonoBehaviour
 
     private void AddAudioData()
     {
-        audioData.Add(new float[2048]);
+        audioData.Add(new float[1024]);
     }
 
     private void OnDisable()
@@ -69,7 +74,6 @@ public class GenerateAudio : MonoBehaviour
         {
             if (!audioSource.isPlaying)
             {
-                timeIndex = 0;  //resets timer before playing sound
                 audioSource.Play();
                 frequency1 = freq;
             }
@@ -84,10 +88,10 @@ public class GenerateAudio : MonoBehaviour
 
     void Update()
     {
-        CheckKey(KeyCode.H, 600f);
-        CheckKey(KeyCode.J, 800f);
-        CheckKey(KeyCode.K, 1000f);
-        CheckKey(KeyCode.L, 1200f);
+        foreach (var key in allKeys)
+        {
+            CheckKey(key.key, key.frequency);
+        }
     }
 
 
@@ -100,10 +104,10 @@ public class GenerateAudio : MonoBehaviour
             {
                 AddAudioData();
             }
-            offset += 2048;
+            offset += 1024;
             genAudioWave.SetFloat("frequency", frequency1);
             genAudioWave.SetFloat("timeOffset", offset);
-            genAudioWave.Dispatch(0, 2048, 1, 1);
+            genAudioWave.Dispatch(0, 1024, 1, 1);
             //Debug.Log(audioData.Count + ", " + audioIndex);
             audioBuffer.GetData(audioData[audioIndex]);
             audioIndex++;            
@@ -119,7 +123,7 @@ public class GenerateAudio : MonoBehaviour
         //Debug.Log("dataLength " + "s=" + audioData[0].ToString("F2") + "|" + audioData[2048].ToString("F2") + "|"+ audioData[audioData.Length-1].ToString("F2") + "  == " + needGen);
         for (int i=0;i<data.Length;i++)
         {
-            data[i] = audioData[0][i];
+            data[i] = audioData[0][i/2];
         }
         audioIndex--;
         if (audioIndex>0)

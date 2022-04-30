@@ -168,11 +168,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frequency1: 800
-  frequency2: 1286
   sampleRate: 44100
   waveLengthInSeconds: 2
   genAudioWave: {fileID: 7200000, guid: 520c0d9e431c4f4458b81dce355d1c49, type: 3}
-  sinMult: 0.01
+  allKeys:
+  - key: 104
+    frequency: 261.63
+  - key: 106
+    frequency: 277.18
+  - key: 107
+    frequency: 293.66
+  - key: 108
+    frequency: 311.13
 --- !u!1 &1456396802
 GameObject:
   m_ObjectHideFlags: 0
