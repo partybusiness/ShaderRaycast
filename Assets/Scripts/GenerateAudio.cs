@@ -24,11 +24,13 @@ public class GenerateAudio : MonoBehaviour
 
     ComputeBuffer audioBuffer;
 
-    float[] audioData;
+    List<float[]> audioData;
+
+    int audioIndex = 0;
 
     int offset = 0;
 
-    private int needGen = 2048;
+    private int needGen = 1;
 
     void Start()
     {
@@ -46,7 +48,13 @@ public class GenerateAudio : MonoBehaviour
         audioBuffer = new ComputeBuffer(2048*2, sizeof(float));
         genAudioWave.SetBuffer(0, "audioWave", audioBuffer);
         genAudioWave.SetFloat("samples", sampleRate);
-        audioData = new float[2048*2];
+        audioData = new List<float[]>();// new float[2048*2];
+        AddAudioData();
+    }
+
+    private void AddAudioData()
+    {
+        audioData.Add(new float[2048]);
     }
 
     private void OnDisable()
@@ -122,15 +130,20 @@ public class GenerateAudio : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if (needGen>0)
+        while (needGen>0)
         {
-            offset += needGen;
+            while (audioIndex >= audioData.Count)
+            {
+                AddAudioData();
+            }
+            offset += 2048;
             genAudioWave.SetFloat("frequency", frequency1);
             genAudioWave.SetFloat("timeOffset", offset);
-            genAudioWave.Dispatch(0, 2048*2, 1, 1);
-            audioBuffer.GetData(audioData);
-            
-            needGen = 0;
+            genAudioWave.Dispatch(0, 2048, 1, 1);
+            Debug.Log(audioData.Count + ", " + audioIndex);
+            audioBuffer.GetData(audioData[audioIndex]);
+            audioIndex++;            
+            needGen --;
         }
     }
 
@@ -138,12 +151,23 @@ public class GenerateAudio : MonoBehaviour
     {
         //Debug.Log(data.Length); //2048 where does that come from?
         //
-       // Debug.Log("dataLength " + "s=" + audioData[0].ToString("F2") + "|" + audioData[2048].ToString("F2") + "|"+ audioData[audioData.Length-1].ToString("F2") + "  == " + needGen);
+        //Debug.Log(channels);
+        //Debug.Log("dataLength " + "s=" + audioData[0].ToString("F2") + "|" + audioData[2048].ToString("F2") + "|"+ audioData[audioData.Length-1].ToString("F2") + "  == " + needGen);
         for (int i=0;i<data.Length;i++)
         {
-            data[i] = audioData[i+ needGen];
+            data[i] = audioData[0][i];
         }
-        needGen += data.Length;
+        audioIndex--;
+        if (audioIndex>0)
+        {
+            var temp = audioData[0];
+            audioData.RemoveAt(0);
+            audioData.Add(temp);
+        } else
+        {
+            audioIndex = 0;
+        }
+        needGen ++;
 
     }
 
