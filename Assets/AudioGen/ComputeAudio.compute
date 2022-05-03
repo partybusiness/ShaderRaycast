@@ -1,0 +1,19 @@
+#pragma kernel CSMain
+
+
+RWStructuredBuffer<float> audioWave;
+
+float frequency;
+float timeOffset;
+float samples;
+
+float SinWave(float freq, uint x, float scale) {
+	return sin((x + timeOffset) / samples / 3.14159 * freq)*scale;
+}
+
+[numthreads(64,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+
+	audioWave[id.x] = SinWave(frequency, id.x, 0.5) + SinWave(frequency*1.1, id.x, 0.25) + SinWave(frequency*1.21, id.x, 0.124) + SinWave(frequency*0.90909090909, id.x, 0.25) + SinWave(frequency*0.82644628099, id.x, 0.124);
+}
