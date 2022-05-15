@@ -10,8 +10,15 @@ Shader "Unlit/RacingCarMaterial"
 
 		_fadeStrength("Fade Strength", float) = 0.3
 
+		_FloorColour("Floor Colour", COLOR) = (1,1,1,1)
 
 		_CeilingColour("Ceiling Colour", COLOR) = (1,1,1,1)
+
+		_CeilingFade("Ceiling Fade", float) = 1.2
+
+		_CarColour("Car Colours", 2D) = "white" {}
+
+		_CarGloss("Car Gloss", 2D) = "white" {}
     }
     SubShader
     {
@@ -44,11 +51,20 @@ Shader "Unlit/RacingCarMaterial"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
+			sampler2D _CarColour;
+
+			sampler2D _CarGloss;
+			
+
 			sampler2D _MapTex;
 
 			sampler2D _WallTex;
 
+			float4 _FloorColour;
+
 			float4 _CeilingColour;
+
+			float _CeilingFade;
 
 			float _TileCount;
 
@@ -88,17 +104,22 @@ Shader "Unlit/RacingCarMaterial"
 				fixed4 dist = stripDistances[floor(angleX * 512)];
 				fixed ypos = abs(angleY - 0.5);
 				fixed wallHeight = (0.5 / dist.x);
-				fixed isWall = (ypos*3 < wallHeight);
+				fixed isWall = (ypos < wallHeight);//why was it *3
 
 
 				float2 newForward = normalize(reflectedDir.xz);
 				fixed yt = 1 / (abs(ypos) * 2);//how to project y angle ypos to distance to floor
 				fixed2 floorCoord = position + newForward * yt;
-				fixed checkVal = (floor(floorCoord.x) + floor(floorCoord.y)) % 2;
-				fixed2 floorUV = (floorCoord + 1) / 512.0;
-				fixed4 floorColour = tex2D(_MapTex, floorUV);
-				//lerp(_FloorColour1, _FloorColour2, checkVal);
-				fixed4 noWallColour = lerp(floorColour, _CeilingColour, angleY > 0.5);
+				//fixed checkVal = (floor(floorCoord.x) + floor(floorCoord.y)) % 2;
+				//fixed4 checkColour = lerp(0, 1, checkVal);
+				fixed2 floorUV = (floorCoord + 1.0) / 512.0;
+				fixed2 dotOffset = tex2D(_MainTex, floorUV).gb - 0.5;
+				fixed isDot = length(floorCoord % 1 - 0.5 + dotOffset*0.5 ) < 0.2;
+				fixed4 floorColour = lerp(_FloorColour, _FloorColour*1.1, isDot);
+				fixed4 ceilingColour = lerp(_CeilingColour, _CeilingColour*_CeilingFade, ypos*2.0);
+				fixed4 skyColour = lerp(ceilingColour, ceilingColour*0.9, isDot);// lerp(tex2D(_MainTex, floorCoord), tex2D(_MainTex, floorUV), 0.5);
+				//lerp(_FloorColour, _FloorColour2, checkVal);
+				fixed4 noWallColour = lerp(floorColour, skyColour, angleY > 0.5);
 
 				fixed2 singleWallUv = float2(dist.a, inverseLerp(0.5 - wallHeight, 0.5 + wallHeight, i.uv.y));
 				fixed2 wallUv = (floor(dist.gb*_TileCount) + singleWallUv) / _TileCount; //invlerp (0.5-wallHeight,0.5+wallHeight, yt); ??
@@ -107,9 +128,19 @@ Shader "Unlit/RacingCarMaterial"
 				fixed4 wallColour = tex2D(_WallTex, wallUv) / clamp((dist.r)*_fadeStrength, 1, 512);// float4(0, dist.gb, 1) / (dist.r*0.3) * dist.a;
 																									//_TileCount
 																									//_FloorColour1
-				fixed4 result = lerp(noWallColour, wallColour, isWall);
-				//result.r = (floor(floor(i.uv.x * 512) % 50) < 25);
-				return result;
+				fixed4 reflectedColour = lerp(noWallColour, wallColour, isWall);
+
+				//so then we can combine it with the paint job and how glossy it is, etc.
+
+				fixed4 carColour = tex2D(_CarColour, i.uv);
+				fixed4 carGloss = tex2D(_CarGloss, i.uv); //rg is max and min from view angle
+
+				//get angle to surface
+				float glance = 1 - abs(dot(normalize(i.normalDir), normalize(i.viewDir)));
+				
+				fixed glossAmount = lerp(carGloss.g, carGloss.r, glance*glance*glance);
+
+				return lerp(carColour, reflectedColour, glossAmount);
             }
             ENDCG
         }

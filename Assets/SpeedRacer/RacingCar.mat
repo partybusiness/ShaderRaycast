@@ -23,6 +23,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CarColour:
+        m_Texture: {fileID: 2800000, guid: 7456ee78ce63cc44da7bd63651409b3a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CarGloss:
+        m_Texture: {fileID: 2800000, guid: 648fcb429d455c04e85a05db31961ebe, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -62,6 +70,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
+    - _CeilingFade: 3.01
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -80,7 +89,8 @@ Material:
     - _ZWrite: 1
     - _fadeStrength: 0.3
     m_Colors:
-    - _CeilingColour: {r: 0.6914521, g: 0.13007298, b: 0.745283, a: 1}
+    - _CeilingColour: {r: 0.253471, g: 0.32870376, b: 0.6037736, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FloorColour: {r: 0.18867922, g: 0.10768955, b: 0.10768955, a: 1}
   m_BuildTextureStacks: []
