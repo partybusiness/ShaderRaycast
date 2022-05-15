@@ -107,7 +107,7 @@ Shader "Unlit/RacingCarFromTexture"
 				//return (angleX * 512) > 256;
 				fixed4 dist = tex2D(_DistTex, float2(angleX, posY)); //TODO should use time for y pos //
 				fixed ypos = abs(angleY - 0.5);
-				fixed wallHeight = (0.5 / dist.x);
+				fixed wallHeight = (0.5 / (dist.x * 256.0));
 				fixed isWall = (ypos < wallHeight);//why was it *3
 
 

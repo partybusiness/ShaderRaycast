@@ -50,7 +50,7 @@ Shader "Unlit/GenerateDistanceStrip"
             {
                 fixed4 col = stripDistances[floor(i.uv.x * 512)];
 				if (floor(i.uv.y * 512) == floor(position.y))
-					return fixed4(col.rgb,1);
+					return fixed4(col.r/256.0, col.gb,1);
 				else
 					return 0;
             }
